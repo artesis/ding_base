@@ -200,7 +200,7 @@ function ding_base_element_process_tableselect_form($element) {
                      ));
           }
           $element[$key] = array(
-            '#type' => isset($choice['#disabled']) && $choice['#disabled'] ? 'hidden' : 'checkbox',
+            '#type' => !empty($choice['#disabled']) ? 'hidden' : 'checkbox',
             '#title' => $title,
             '#title_display' => 'invisible',
             '#return_value' => $key,
@@ -213,7 +213,7 @@ function ding_base_element_process_tableselect_form($element) {
           // unique id for each radio button.
           $parents_for_id = array_merge($element['#parents'], array($key));
           $element[$key] = array(
-            '#type' => isset($choice['#disabled']) && $choice['#disabled'] ? 'hidden' : 'radio',
+            '#type' => !empty($choice['#disabled']) ? 'hidden' : 'radio',
             '#title' => '',
             '#return_value' => $key,
             '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
