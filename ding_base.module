@@ -295,5 +295,5 @@ function theme_tableselect_form($variables) {
     }
   }
 
-  return theme('table', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty'], 'attributes' => $element['#attributes']));
+  return theme('table__alternative', array('header' => $header, 'rows' => $rows, 'empty' => $element['#empty'], 'attributes' => $element['#attributes']));
 }
