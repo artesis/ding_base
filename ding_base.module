@@ -200,12 +200,14 @@ function ding_base_element_process_tableselect_form($element) {
                      ));
           }
           $element[$key] = array(
-            '#type' => !empty($choice['#disabled']) ? 'hidden' : 'checkbox',
+            '#type' => 'checkbox',
             '#title' => $title,
             '#title_display' => 'invisible',
             '#return_value' => $key,
             '#default_value' => isset($value[$key]) ? $key : NULL,
             '#attributes' => $element['#attributes'],
+            '#attributes' => !empty($choice['#disabled']) ? array('class' => array('element-invisible')) : array(),
+            '#disabled' => !empty($choice['#disabled']) ? TRUE : FALSE,
           );
         }
         else {
@@ -213,7 +215,7 @@ function ding_base_element_process_tableselect_form($element) {
           // unique id for each radio button.
           $parents_for_id = array_merge($element['#parents'], array($key));
           $element[$key] = array(
-            '#type' => !empty($choice['#disabled']) ? 'hidden' : 'radio',
+            '#type' => 'radio',
             '#title' => '',
             '#return_value' => $key,
             '#default_value' => ($element['#default_value'] == $key) ? $key : NULL,
@@ -221,6 +223,8 @@ function ding_base_element_process_tableselect_form($element) {
             '#parents' => $element['#parents'],
             '#id' => drupal_html_id('edit-' . implode('-', $parents_for_id)),
             '#ajax' => isset($element['#ajax']) ? $element['#ajax'] : NULL,
+            '#attributes' => !empty($choice['#disabled']) ? array('class' => array('element-invisible')) : array(),
+            '#disabled' => !empty($choice['#disabled']) ? TRUE : FALSE,
           );
         }
         if (isset($element['#options'][$key]['#weight'])) {
