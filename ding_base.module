@@ -253,9 +253,14 @@ function ding_base_element_process_tableselect_form($element) {
 
 /**
  * Theme function for our custom element.
+ *
+ * Custom fields:
+ * Set #_choice_last to true to make choice column last.
+ * Set #_select_all_label to enable label for "select all" input.
  */
 function theme_tableselect_form($variables) {
   $element = $variables['element'];
+  $order_func = empty($element['#_choice_last']) ? 'array_unshift' : 'array_push';
   $rows = array();
   $header = array();
   if (!empty($element['#options'])) {
@@ -271,8 +276,6 @@ function theme_tableselect_form($variables) {
       if (isset($element['#options'][$key]['#attributes'])) {
         $row += $element['#options'][$key]['#attributes'];
       }
-      // Render the checkbox / radio element.
-      $row['data'][] = drupal_render($element[$key]);
 
       // As theme_table only maps header and row columns by order, create the
       // correct order by iterating over the header fields.
@@ -283,6 +286,10 @@ function theme_tableselect_form($variables) {
         $translated_title = $element['#header'][$fieldname];
         $header[$fieldname] = array('data' => $translated_title, 'class' => $fieldname);
       }
+
+      // Render the checkbox / radio element.
+      $order_func($row['data'], drupal_render($element[$key]));
+
       $rows[] = $row;
     }
     // Add an empty header or a "Select all" checkbox to provide room for the
@@ -290,12 +297,18 @@ function theme_tableselect_form($variables) {
     if ($element['#js_select']) {
       // Add a "Select all" checkbox.
       drupal_add_js('misc/tableselect.js');
-      array_unshift($header, array('class' => array('select-all')));
+      $order_func($header, array('class' => array('select-all')));
+
+      // Add label for checkbox.
+      if (!empty($element['#_select_all_label'])) {
+        drupal_add_js(array('ding_base' => array('select_all_label' => $element['#_select_all_label'])), 'setting');
+        drupal_add_js(drupal_get_path('module', 'ding_base') . '/js/ding_base_tableselect.js');
+      }
     }
     else {
       // Add an empty header when radio buttons are displayed or a "Select all"
       // checkbox is not desired.
-      array_unshift($header, '');
+      $order_func($header, '');
     }
   }
 
